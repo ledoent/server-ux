@@ -23,5 +23,5 @@ class WarnOption(models.Model):
             ("warning", "Warning"),
             ("block", "Block"),
         ],
-        help="Choose the type of warning message",
+        help="""Choose the type of warning message""",
     )
