@@ -158,3 +158,9 @@ msgstr "Opciones de alerta"
 #: model:ir.model.fields.selection,name:base_warn_option.selection__warn_option__allowed_warning_type__warning
 msgid "Warning"
 msgstr "Advertencia"
+
+#. module: base_warn_option
+#: model:ir.model.fields.selection,name:base_warn_option.allowed_warning_type
+msgid "If no option is selected, the message is valid for both warning messages and blocking messages"
+msgstr "Si no se selecciona ninguna opción, el mensaje es válido tanto para mensajes de advertencia como para mensajes de bloqueo"
+
