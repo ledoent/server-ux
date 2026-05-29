@@ -31,7 +31,7 @@ class TestFilterMultiUser(common.TransactionCase):
                 "login": login,
                 "password": "demo",
                 "email": f"{login}@yourcompany.com",
-                "groups_id": [(6, 0, group_ids)],
+                "group_ids": [(6, 0, group_ids)],
             }
         )
         return user
