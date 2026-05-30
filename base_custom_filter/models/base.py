@@ -14,7 +14,7 @@ class Base(models.AbstractModel):
     def _user_has_access_to_item(self, item):
         if not item.group_ids:
             return True
-        return bool(set(self.env.user.groups_id.ids) & set(item.group_ids.ids))
+        return bool(set(self.env.user.all_group_ids.ids) & set(item.group_ids.ids))
 
     @api.model
     def _add_grouped_filters(self, res, custom_filters):
@@ -36,7 +36,7 @@ class Base(models.AbstractModel):
                         },
                     )
                     node[0].addnext(elem)
-        res["arch"] = etree.tostring(arch)
+        res["arch"] = etree.tostring(arch, encoding="unicode")
         return res
 
     @api.model
@@ -61,7 +61,7 @@ class Base(models.AbstractModel):
                         },
                     )
                     node[0].addnext(elem)
-        res["arch"] = etree.tostring(arch)
+        res["arch"] = etree.tostring(arch, encoding="unicode")
         return res
 
     @api.model
@@ -77,7 +77,7 @@ class Base(models.AbstractModel):
             if search_field.filter_domain:
                 new_field.set("filter_domain", search_field.filter_domain)
             xml_arch.append(new_field)
-        res["arch"] = etree.tostring(xml_arch)
+        res["arch"] = etree.tostring(xml_arch, encoding="unicode")
         return res
 
     @api.model

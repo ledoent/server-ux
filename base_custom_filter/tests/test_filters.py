@@ -8,10 +8,14 @@ class Test(TransactionCase):
         super().setUpClass()
         cls.filters_group_obj = cls.env["ir.filters.group"]
         cls.filters_obj = cls.env["ir.filters"]
+        # model_id is the (invisible-in-form) Selection of model names, so it is
+        # seeded through the action context instead of written via the Form.
+        ctx = {"default_model_id": "ir.filters.group"}
+        cls.filters_obj = cls.filters_obj.with_context(**ctx)
+        cls.filters_group_obj = cls.filters_group_obj.with_context(**ctx)
         filters_group = Form(cls.filters_obj)
         filters_group.name = "Test No groupby group"
         filters_group.type = "groupby"
-        filters_group.model_id = "ir.filters.group"
         filters_group.groupby_field = cls.env.ref(
             "base_custom_filter.field_ir_filters_group__name"
         )
@@ -20,7 +24,6 @@ class Test(TransactionCase):
         filters_group = Form(cls.filters_obj)
         filters_group.name = "Test No filters group"
         filters_group.type = "filter"
-        filters_group.model_id = "ir.filters.group"
         filters_group.domain = '[["id","=",1]]'
         filters_group = filters_group.save()
 
@@ -28,7 +31,6 @@ class Test(TransactionCase):
         with Form(self.filters_obj) as filters_search:
             filters_search.name = "Test Search Field"
             filters_search.type = "search"
-            filters_search.model_id = "ir.filters.group"
             filters_search.search_field_id = self.env.ref(
                 "base_custom_filter.field_ir_filters_group__display_name"
             )
@@ -40,7 +42,7 @@ class Test(TransactionCase):
 
         # Test get_view() content
         view_dict = self.filters_group_obj.get_view(view_type="search")
-        view_content = view_dict.get("arch", b"").decode("utf-8")
+        view_content = view_dict.get("arch", "")
         # noqa: B950
         search_string = (
             '<field name="display_name" '
@@ -54,7 +56,6 @@ class Test(TransactionCase):
         with Form(self.filters_group_obj) as filters_group:
             filters_group.name = "Test filters group"
             filters_group.type = "filter"
-            filters_group.model_id = "ir.filters.group"
             with filters_group.filter_ids.new() as line:
                 line.name = "Test filter line"
                 line.domain = '[["id","=",1]]'
@@ -65,7 +66,7 @@ class Test(TransactionCase):
         self.assertEqual(filter_group.name, "Test filters group")
 
         view_dict = self.filters_group_obj.get_view(view_type="search")
-        view_content = view_dict.get("arch", b"").decode("utf-8")
+        view_content = view_dict.get("arch", "")
         filter_name = "ir_custom_filter_" + str(
             self.filters_obj.search([("name", "=", "Test filter line")]).id
         )
@@ -85,7 +86,6 @@ class Test(TransactionCase):
         with Form(self.filters_group_obj) as filters_group:
             filters_group.name = "Test groupby group"
             filters_group.type = "groupby"
-            filters_group.model_id = "ir.filters.group"
             with filters_group.filter_ids.new() as line:
                 line.name = "Test groupby line"
                 line.groupby_field = self.env.ref(
@@ -98,7 +98,7 @@ class Test(TransactionCase):
         self.assertEqual(filter_group.name, "Test groupby group")
 
         view_dict = self.filters_group_obj.get_view(view_type="search")
-        view_content = view_dict.get("arch", b"").decode("utf-8")
+        view_content = view_dict.get("arch", "")
         filter_name = "ir_custom_filter_" + str(
             self.filters_obj.search([("name", "=", "Test groupby line")]).id
         )

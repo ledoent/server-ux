@@ -7,7 +7,7 @@
         <field name="model">ir.filters</field>
         <field name="inherit_id" ref="base.ir_filters_view_form" />
         <field name="arch" type="xml">
-            <field name="active" position="after">
+            <field name="is_default" position="after">
                 <field name="type" />
                 <field
                     name="search_field_id"
@@ -45,7 +45,7 @@
             <field name="is_default" position="attributes">
                 <attribute name="invisible">type != 'favorite'</attribute>
             </field>
-            <field name="user_id" position="attributes">
+            <field name="user_ids" position="attributes">
                 <attribute name="invisible">type != 'favorite'</attribute>
             </field>
             <field name="context" position="attributes">

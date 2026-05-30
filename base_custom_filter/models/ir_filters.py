@@ -3,7 +3,7 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl.html).
 
 from odoo import api, fields, models
-from odoo.osv import expression
+from odoo.fields import Domain
 
 
 class IrFilters(models.Model):
@@ -55,10 +55,9 @@ class IrFilters(models.Model):
         )
 
     @api.model
-    @api.returns("self")
     def search(self, domain, offset=0, limit=None, order=None):
         if self.env.context.get("filter_type"):
-            domain = expression.AND(
+            domain = Domain.AND(
                 (domain, [("type", "=", self.env.context["filter_type"])])
             )
         return super().search(domain, offset, limit, order)
