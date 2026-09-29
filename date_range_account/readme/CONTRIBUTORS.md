@@ -2,3 +2,4 @@
 
 - [APSL](https://apsl.tech):
   - Miquel Pascual  \<<mpascual@apsl.net>\>
+- Don Kendall \<<dkendall@ledoweb.com>\>
