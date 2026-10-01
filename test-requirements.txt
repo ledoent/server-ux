@@ -1,0 +1,14 @@
+# DO NOT MERGE — temporary pin until the 20.0 port of date_range lands.
+#
+# date_range_account depends on date_range, which does not exist on this repo's
+# 20.0 branch (an orphan skeleton with no addons) and has no 20.0 wheel on PyPI
+# (odoo-addon-date-range tops out at 19.0.1.0.0.6). Without this, OCA CI cannot
+# resolve the dependency at all and the test jobs die before Odoo even starts --
+# which is exactly what they were doing: both "test with Odoo" and "test with
+# OCB" failed with no Odoo output in the log.
+#
+# ADOPTED: OCA/server-ux#1341 @60bfdb59, not our own 20.0-mig-date_range. Ours
+# imported useChildSubEnv, which 20.0 does not export at all; #1341 does the
+# DomainSelector -> TreeEditor hand-off with a real Owl 3 Plugin over
+# providePlugins/usePlugin, matching core's own debug_context.js.
+odoo-addon-date_range @ git+https://github.com/OCA/server-ux@refs/pull/1341/head#subdirectory=date_range
