@@ -1,10 +1,11 @@
 import {domainFromTreeDateRange, treeFromDomainDateRange} from "./condition_tree.esm";
 
-import {onWillStart, useChildSubEnv} from "@odoo/owl";
 import {Domain} from "@web/core/domain";
 import {DomainSelector} from "@web/core/domain_selector/domain_selector";
-import {useService} from "@web/core/utils/hooks";
+import {onWillStart} from "@odoo/owl";
 import {patch} from "@web/core/utils/patch";
+import {useService} from "@web/core/utils/hooks";
+import {useSubEnv} from "@web/owl2/utils";
 
 const ARCHIVED_DOMAIN = `[("active", "in", [True, False])]`;
 
@@ -14,7 +15,14 @@ patch(DomainSelector.prototype, {
         this.orm = useService("orm");
         this.dateRanges = [];
         this.dateRangeTypes = [];
-        useChildSubEnv({domain: this});
+        // UseChildSubEnv is gone in 20.0: it is absent from owl.js, from the
+        // owl2 compatibility layer and from @web/owl2/utils' exports, and no
+        // core module uses it. (upgrade_code's owl3-migration only rewrites the
+        // import to @web/owl2/utils, which does not export it either.) The
+        // compat useSubEnv is the replacement: it reimplements the Owl 2
+        // behaviour on providePlugins([EnvPlugin]) and also sets component.env,
+        // so the patched TreeEditor below still reads this.env.domain.
+        useSubEnv({domain: this});
         onWillStart(async () => {
             this.dateRanges = await this.orm.call("date.range", "search_read", []);
             this.dateRangeTypes = await this.orm.call(
